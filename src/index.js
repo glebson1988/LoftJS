@@ -12,10 +12,6 @@
 
  Другими словами: функция должна возвращать в неизменном виде то, что поступает ей на вход
  */
-// function returnFirstArgument(param) {
-//     return param;
-// }
-
 const returnFirstArgument = param => param;
 
 /*
@@ -32,10 +28,6 @@ const returnFirstArgument = param => param;
  Пример:
    sumWithDefaults(10) вернет 110
  */
-// function sumWithDefaults(a, b = 100) {
-//     return a + b;
-// }
-
 const sumWithDefaults = (a, b = 100) => a + b;
 
 /*
@@ -46,12 +38,7 @@ const sumWithDefaults = (a, b = 100) => a + b;
  Пример:
    returnFnResult(() => 'привет') вернет 'привет'
  */
-// function returnFnResult(fn) {
-//     return fn();
-// }
-
 const returnFnResult = fn => fn();
-
 
 /*
  Задание 4:
@@ -70,7 +57,6 @@ function returnCounter(number = 0) {
     return () => ++number;
 }
 
-
 /*
  Задание 5 *:
 
@@ -83,7 +69,6 @@ function returnCounter(number = 0) {
 function returnArgumentsArray() {
     return Array.prototype.slice.call(arguments);
 }
-
 
 /*
  Задание 6 *:
@@ -103,7 +88,6 @@ function returnArgumentsArray() {
 function bindFunction(fn, ...args) {
     return () => fn(...args);
 }
-
 
 export {
     returnFirstArgument,
