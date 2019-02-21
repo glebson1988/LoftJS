@@ -147,6 +147,64 @@ function deleteTextNodesRecursive(where) {
    }
  */
 function collectDOMStat(root) {
+    function getTag(parent) {
+        const tags = {};
+
+        for (const child of Array.from(parent.children)) {
+            tags[child.tagName] ? tags[child.tagName] = ++tags[child.tagName] : tags[child.tagName] = 1;
+
+            if (child.children.length > 0) {
+                const childTags = getTag(child);
+
+                for (let key in childTags) {
+                    if (childTags.hasOwnProperty(key)) {
+                        tags[key] ? tags[key] += childTags[key] : tags[key] = childTags[key];
+                    }
+                }
+            }
+        }
+
+        return tags;
+    }
+
+    function getClass(parent) {
+        const classes = {};
+
+        for (const child of Array.from(parent.children)) {
+
+            for (const elem of child.classList) {
+                classes[elem] ? classes[elem] = ++classes[elem] : classes[elem] = 1;
+            }
+
+            if (child.children.length > 0) {
+                const childList = getClass(child);
+
+                for (let key in childList) {
+                    if (childList.hasOwnProperty(key)) {
+                        classes[key] ? classes[key] += childList[key] : classes[key] = childList[key];
+                    }
+                }
+            }
+        }
+
+        return classes;
+    }
+
+    function getText(parent) {
+        let countText = 0;
+
+        for (const child of Array.from(parent.childNodes)) {
+            child.nodeType === 3 ? countText++ : countText += getText(child);
+        }
+
+        return countText;
+    }
+
+    return {
+        tags: getTag(root),
+        classes: getClass(root),
+        texts: getText(root)
+    };
 }
 
 /*
@@ -182,6 +240,29 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
+    let mutationObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length > 0) {
+                const addArr = [];
+
+                for (const elem of mutation.addedNodes) {
+                    addArr.push(elem);
+                }
+
+                fn({ type: 'insert', nodes: addArr });
+            } else if (mutation.removedNodes.length > 0) {
+                const removedArr = [];
+
+                for (const elem of mutation.removedNodes) {
+                    removedArr.push(elem);
+                }
+
+                fn({ type: 'remove', nodes: removedArr });
+            }
+        })
+    });
+
+    mutationObserver.observe(where, { childList: true, subtree: true });
 }
 
 export {
