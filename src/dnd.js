@@ -61,8 +61,6 @@ function addListeners(target) {
             target.style.top = `${e.pageY - offsetTop}px`;
         }
 
-        move(e);
-
         document.onmousemove = e => {
             move(e);
         };
