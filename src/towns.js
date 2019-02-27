@@ -28,6 +28,8 @@
    const newDiv = document.createElement('div');
    homeworkContainer.appendChild(newDiv);
  */
+import { loadAndSortTowns as loadTowns } from '../src/index';
+
 const homeworkContainer = document.querySelector('#homework-container');
 
 /*
@@ -35,20 +37,7 @@ const homeworkContainer = document.querySelector('#homework-container');
 
  Массив городов пожно получить отправив асинхронный запрос по адресу
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
- */
-function loadTowns() {
-    return fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
-        .then(response => {
-            if (response.status >= 400) {
-                return Promise.reject('Не удалось загрузить города');
-            }
 
-            return response.json();
-        })
-        .then(cities => cities.sort((one, two) => one.name.localeCompare(two.name)));
-}
-
-/*
  Функция должна проверять встречается ли подстрока chunk в строке full
  Проверка должна происходить без учета регистра символов
 
