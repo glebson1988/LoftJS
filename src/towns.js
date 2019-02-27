@@ -37,6 +37,15 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
+    return fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
+        .then(response => {
+            if (response.status >= 400) {
+                return Promise.reject('Не удалось загрузить города');
+            }
+
+            return response.json();
+        })
+        .then(cities => cities.sort((one, two) => one.name.localeCompare(two.name)));
 }
 
 /*
@@ -51,6 +60,7 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
+    return full.toLowerCase().includes(chunk.toLowerCase());
 }
 
 /* Блок с надписью "Загрузка" */
@@ -61,9 +71,46 @@ const filterBlock = homeworkContainer.querySelector('#filter-block');
 const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
+let towns;
 
-filterInput.addEventListener('keyup', function() {
+loadTowns().then((data) => {
+    towns = data;
+    loadingBlock.style.display = 'none';
+    filterBlock.style.display = 'block';
+})
+    .catch((err) => {
+        homeworkContainer.innerHTML = `${err}`;
+
+        let repeatButton = document.createElement('button');
+
+        repeatButton.innerHTML = 'Повторить';
+        homeworkContainer.appendChild(repeatButton);
+        repeatButton.style = 'background: #429398;' +
+                             'color: #fff;' +
+                             'outline: none;' +
+                             'padding: 5px 10px;' +
+                             'font-size: 14px;' +
+                             'display: block';
+        repeatButton.addEventListener('click', () => loadTowns());
+    });
+
+filterInput.addEventListener('keyup', function () {
     // это обработчик нажатия кливиш в текстовом поле
+    let inputVal = filterInput.value;
+
+    filterResult.innerHTML = '';
+
+    for (let i = 0; i < towns.length; i++) {
+        let town = towns[i].name;
+
+        if (town !== '' && inputVal !== '' && isMatching(town, inputVal)) {
+            let townP = document.createElement('p');
+
+            townP.innerHTML = town;
+            filterResult.appendChild(townP);
+        }
+    }
+
 });
 
 export {
