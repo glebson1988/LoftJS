@@ -26,7 +26,7 @@ function delayPromise(seconds) {
    loadAndSortTowns().then(towns => console.log(towns)) // должна вывести в консоль отсортированный массив городов
  */
 function loadAndSortTowns() {
-    return fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.jso')
+    return fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
         .then(response => {
             if (response.status >= 400) {
                 return Promise.reject('Не удалось загрузить города');
