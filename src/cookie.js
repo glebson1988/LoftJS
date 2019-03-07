@@ -76,27 +76,29 @@ function filteredCookies() {
 }
 
 function renderCookies() {
-    const cookies = filteredCookies();
+    let cookies = filteredCookies();
 
     listTable.innerHTML = '';
 
-    Object.entries(cookies).forEach(
-        ([key, value]) => {
-            const tr = document.createElement('tr'),
-                tdName = document.createElement('td'),
-                tdValue = document.createElement('td'),
-                tdDelete = document.createElement('td');
+    cookies = Object.keys(cookies).map(function (key) {
+        const tr = document.createElement('tr'),
+            tdName = document.createElement('td'),
+            tdValue = document.createElement('td'),
+            tdDelete = document.createElement('td');
 
-            tdName.innerHTML = key;
-            tdValue.innerHTML = value;
-            tdDelete.innerHTML = `<button class='delete-button' data-id = ${key}>Удалить</button>`;
-
-            tr.appendChild(tdName);
-            tr.appendChild(tdValue);
-            tr.appendChild(tdDelete);
-            listTable.appendChild(tr);
+        if (cookies[key] === undefined) {
+            return;
         }
-    );
+
+        tdName.innerHTML = key;
+        tdValue.innerHTML = cookies[key] || '';
+        tdDelete.innerHTML = `<button class='delete-button' data-id = ${key}>Удалить</button>`;
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdValue);
+        tr.appendChild(tdDelete);
+        listTable.appendChild(tr);
+    });
 }
 
 function deleteCookie(e) {
@@ -107,7 +109,6 @@ function deleteCookie(e) {
 
         renderCookies();
     }
-
 }
 
 document.addEventListener('click', deleteCookie);
