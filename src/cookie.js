@@ -91,7 +91,7 @@ function renderCookies() {
         }
 
         tdName.innerHTML = key;
-        tdValue.innerHTML = cookies[key] || '';
+        tdValue.innerHTML = cookies[key];
         tdDelete.innerHTML = `<button class='delete-button' data-id = ${key}>Удалить</button>`;
 
         tr.appendChild(tdName);
